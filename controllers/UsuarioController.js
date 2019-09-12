@@ -138,8 +138,9 @@ class UsuarioController {
 
       return usuario.save().then(() => {
         enviarEmailRecovery({ usuario, recovery: recoveryData }, 
-          (error = null, success = null));
-        return res.render('recovery', { error, success });
+          (error = null, success = null) => {
+            return res.render('recovery', { error, success });
+          });    
       }).catch(next);
     }).catch(next);
   }

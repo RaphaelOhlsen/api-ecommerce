@@ -18,7 +18,7 @@ class UsuarioController {
 
   //GET /:id
   show(req, res, next){
-    Usuario.findById(req.params.id).populate({ path: 'loja'})
+    Usuario.findById(req.params.id)//.populate({ path: 'loja'})
     .then(usuario => {
       if(!usuario) {
         return res.status(401).json({ errors: 'Usuário não registrado'});
@@ -63,7 +63,7 @@ class UsuarioController {
         return res.status(401).json({ errors: "Usuario não registrado" });
       }
       if(typeof nome !== "undefined") {
-        usuaruio.nome = nome;
+        usuario.nome = nome;
       }
       if(typeof email !== "undefined") {
         usuario.email = email;

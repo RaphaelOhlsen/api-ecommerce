@@ -7,10 +7,10 @@ const usuarioController = new UsuarioController();
 router.post('/login', usuarioController.login);
 router.post('/resgistrar', usuarioController.store);
 router.put('/', auth.required, usuarioController.update);
-router.delete('/', auth.required, usuarioContoller.remove);
+router.delete('/', auth.required, usuarioController.remove);
 
 router.get('/recuperar-senha', usuarioController.showRecovery);
-router.post('/recuperar-senha', usuario.Controller.createRecovery);
+router.post('/recuperar-senha', usuarioController.createRecovery);
 router.get('/senha-recuperada', usuarioController.showCompleteRecovery);
 router.post('/senha-recuperada', usuarioController.completeRecovery);
 

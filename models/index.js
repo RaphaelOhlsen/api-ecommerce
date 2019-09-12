@@ -1,1 +1,1 @@
-import ('./usuario');
+require('./usuario');

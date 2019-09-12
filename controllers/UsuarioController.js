@@ -57,7 +57,7 @@ class UsuarioController {
     const { nome, email, password } = req.body;
     Usuario.findById(req.payload.id).then((usuario) => {
       if(!usuario) {
-        return res.status(401).json({ errors: "Usuario não encontrado" });
+        return res.status(401).json({ errors: "Usuario não registrado" });
       }
       if(typeof nome !== "undefined") {
         usuaruio.nome = nome;
@@ -86,6 +86,8 @@ class UsuarioController {
       }).catch(next);
     }).catch(next);
   }
+
+
 
   //POST /login
   login(req, res, next) {

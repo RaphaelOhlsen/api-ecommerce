@@ -5,7 +5,7 @@ const UsuarioController = require("../../../controllers/UsuarioController");
 const usuarioController = new UsuarioController();
 
 router.post('/login', usuarioController.login);
-router.post('/resgistrar', usuarioController.store);
+router.post('/registrar', usuarioController.store);
 router.put('/', auth.required, usuarioController.update);
 router.delete('/', auth.required, usuarioController.remove);
 

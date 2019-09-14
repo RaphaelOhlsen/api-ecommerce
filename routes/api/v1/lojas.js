@@ -11,6 +11,7 @@ router.get('/:id', lojaController.show);
 
 router.post('/', auth.required, lojaController.store);
 router.put('/:id', auth.required, lojaValidation, lojaController.update);
-router.delete(':/id', auth.required, lojaValidation, lojaController.remove);
+router.delete('/:id', auth.required, lojaValidation, lojaController.remove);
+// router.delete("/", (req,res) => res.send('OK'));
 
 module.exports = router;

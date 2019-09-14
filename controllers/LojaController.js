@@ -32,7 +32,7 @@ class LojaController {
     }
 
     const loja = new Loja ({nome, cnpj, email, telefones, endereco });
-    loja.save.then(() => res.send({ loja})).catch(next);
+    loja.save().then(() => res.send({ loja})).catch(next);
     
   }
 
@@ -48,7 +48,7 @@ class LojaController {
       if( telefones ) loja.telefones = telefones;
       if( endereco ) loja.endereco = endereco;
 
-      loja.save().then(() => res.send({ lja})).catch(next);
+      loja.save().then(() => res.send({ loja})).catch(next);
     }).catch(next);
   }
 

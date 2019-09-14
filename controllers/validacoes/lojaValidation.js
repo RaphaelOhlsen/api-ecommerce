@@ -18,10 +18,10 @@ module.exports = (req,res,next) => {
     if(!usuario.loja) {
       return res.sendStatus(401);
     }
-    if(!usuario.premissao.includes('admin')) {
+    if(!usuario.permissao.includes('admin')) {
       return res.sendStatus(401);
     }
-    if(usuario.loja !== loja) {
+    if(usuario.loja.toString() !== loja) {
       return res.sendStatus(401);
     }
     next();

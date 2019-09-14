@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Usuario = mongoose.model('Usuario');
 const Loja = mongoose.model('Loja');
 
-modules.exports = (req,res,next) => {
+module.exports = (req,res,next) => {
   if(!req.payload.id) {
     return res.sendStatus(401);
   }

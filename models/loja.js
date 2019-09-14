@@ -6,7 +6,7 @@ const LojaSchema = mongoose.Schema({
   cnpj: { type: String, required: true, unique: true },
   email: { type: String },
   telefones: {
-    type: [{ type: string }]
+    type: [{ type: String }]
   },
   endereco: {
     type: {

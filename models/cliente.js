@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
-import Schema from monggose.Schema;
+const Schema  = mongoose.Schema;
 
 const ClienteSchema = Schema({
   usuario: { type: Schema.Types.ObjectId, ref: "Usuario", required: true },

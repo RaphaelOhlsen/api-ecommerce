@@ -1,4 +1,8 @@
-const router = require("express").Router();
+
+// const router = require("express").Router();
+import { Router } from "express";
+const router = new Router();
+
 
 const auth = require("../../auth");
 const Validation = require('express-validation');

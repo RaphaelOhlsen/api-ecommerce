@@ -5,6 +5,12 @@ const Usuario = mongoose.model('Usuario');
 
 class ClienteController {
 
+
+  /**
+   * 
+   * ADMIN
+   */
+
   // GET / index
   async index(req,res,next){
     const offset = Number(req.query.offset) || 0;
@@ -51,6 +57,39 @@ class ClienteController {
       next(e);
     }
   }
+
+  // GET /admin/:id/pedidos
+  showPedidosCliente(req,res,next){
+    return res.status(400).SEND({ error: "Em desenvolvimento." });
+  }
+
+  //PUT /admin/:id
+  async updateAdmin(req,res,next){
+    const { nome, cpd, emal, telefones, endereco, dataDeNascimento } = req.body;
+    try {
+      const cliente = await Cliente.findById(req.params.id).populate('usuario');
+      if(nome){
+        cliente.usuario.nome = nome;
+        cliente.nome = nome;
+      }
+      if(email) cliente.usuario.email = email;
+      if(telefones) cliente.telefones = telefones;
+      if(endereco) cliente.endereco = endereco;
+      if(dataDeNascimento) cliente.dataDeNascimento = dataDeNascimento;
+      await cliente.save();
+      return res.send({ cliente });
+    } catch(e){
+      next(e);
+    }
+  }
+
+   /**
+   * 
+   * CLIENTE
+   */
+
+  
+
 }
 
 export default ClienteController;

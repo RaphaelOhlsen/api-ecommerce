@@ -88,8 +88,71 @@ class ClienteController {
    * CLIENTE
    */
 
-  
+  async show(req,res,next){
+    try {
+      const cliente = await Cliente
+      .findOne({ usuario: req.payload.id, loja: req.query.loja})
+      .populate('usuario');
+      return res.send({ cliente });
+    } catch(e){
+      next(e);
+    }
+  }
 
+  async store(req,res,next){
+    const { nome, email, cpf, telefones, 
+            endereco, dataDeNascimento, password } = req.body;
+    const { loja } = req.query;
+
+    const usuario = new Usuario({ nome, email, loja });
+    usuario.setSenha(password);
+    const cliente = new Cliente({ nome, cpf, telefones, endereco, loja,                                       dataDeNascimento, usuario: usuario._id });
+    try {
+      await usuario.save();
+      await cliente.save();
+      return res.send({ cliente: Object.assign({}, 
+                        cliente._doc, { email: usuario.email }) 
+                      });
+    }catch(e){
+      next(e);
+    }
+  }
+
+  async update(req,res,next){
+    const { nome, email, cpf, telefones, 
+      endereco, dataDeNascimento, password } = req.body;
+    try {
+      const cliente = await Cliente.findOne({usuario: req.payload.id})
+                      .populate('usuario');
+      if(!cliente) return res.send({ error: 'Cliente não existe.'});
+      if(nome){
+        cliente.usuario.nome = nome;
+        cliente.nome = nome;
+      }
+      if(email) cliente.usuario.email = email;
+      if(password) cliente.usuario.setSenha(password);
+      if(cpf) cliente.cpf = cpf;
+      if(telefones) cliente.telefones = telefones;
+      if(dataDeNascimento) cliente.dataDeNascimento = dataDeNascimento;
+      await cliente.save();
+      return res.send({ cliente });
+    }catch(e){
+      next(e);
+    }
+  }
+
+  async remove(req,res,next){
+    try {
+      const cliente = await Cliente.findOne({ usuario: req.payload.id})
+                      .populate('usuario');
+      await cliente.usuario.remove();
+      cliente.deletado = true;
+      await cliente.save();
+      return res.send({ deletado: true });
+    }catch(e) {
+      next(e);
+    }
+  }
 }
 
 export default ClienteController;

@@ -9,4 +9,3 @@ router.get('/', (req,res,next) => res.send({ ok: true }));
 module.exports = router;
 
 
-////Nao segui a risca

@@ -1,13 +1,11 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require ('mongoose');
+const uniqueValidator = require ('mongoose-unique-validator');
 
 const LojaSchema = mongoose.Schema({
   nome: { type: String, required: true },
-  cnpj: { type: String, required: true, unique: true },
+  cnpj: { type: String, required: true, unique: true},
   email: { type: String },
-  telefones: {
-    type: [{ type: String }]
-  },
+  telefones: { type: [{ type: String }] },
   endereco: {
     type: {
       local: { type: String, required: true },
@@ -15,12 +13,12 @@ const LojaSchema = mongoose.Schema({
       complemento: { type: String },
       bairro: { type: String, required: true },
       cidade: { type: String, required: true },
-      CEP: { type: String, required: true },
+      CEP: { type: String, required: true }
     },
     required: true
   }
-},{ timestamps: true });
+}, { timestamps: true });
 
-LojaSchema.plugin(uniqueValidator, { message: "já está sendo utilizado"})
+LojaSchema.plugin(uniqueValidator, { message: 'já está sendo utilizado'});
 
-module.exports = mongoose.model("Loja", LojaSchema);
+module.exports = mongoose.model('Loja', LojaSchema);

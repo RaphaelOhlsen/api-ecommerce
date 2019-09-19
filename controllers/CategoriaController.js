@@ -76,4 +76,4 @@ class CategoriaController {
 
 }
 
-export default CategoriaController;
+module.exports =  CategoriaController;

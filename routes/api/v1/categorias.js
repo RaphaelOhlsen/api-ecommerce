@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const CategoriaController = require('../../../controllers/CategoriaController');
+const CategoriaController = require("../../../controllers/CategoriaController");
 
 const auth = require('../../auth');
 const Validation = require('express-validation');
@@ -9,14 +9,14 @@ const { CategoriaValidation } = require('../../../controllers/validacoes/categor
 
 const categoriaController = new CategoriaController();
 
-router.get('/', categoriaController.index);
-router.get('/disponiveis', categoriaController.indexDisponiveis);
-reouter.get('/:id', categoriaController.show);
+router.get('/', Validation(CategoriaValidation.index), categoriaController.index);
+router.get('/disponiveis', Validation(CategoriaValidation.indexDisponiveis), categoriaController.indexDisponiveis);
+router.get('/:id', Validation(CategoriaValidation.show), categoriaController.show);
 
-router.post('/', auth.required, LojaValidation.admin, categoriaController.store);
-router.put('/:id', auth.required, LojaValidation.admin, categoriaController.update);
-router.delete('/:id', auth.required, LojaValidation.admin, categoriaController.remove);
+router.post('/', auth.required, LojaValidation.admin, Validation(CategoriaValidation.store), categoriaController.store);
+router.put('/:id', auth.required, LojaValidation.admin, Validation(CategoriaValidation.update) ,categoriaController.update);
+router.delete('/:id', auth.required, LojaValidation.admin, Validation(CategoriaValidation.remove) ,categoriaController.remove);
 
 //ROTAS AO PRODUTO
 
-export default router;
+module.exports = router;

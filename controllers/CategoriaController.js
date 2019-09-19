@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Categoria = mongoose.model('Categoria');
 
+
 class CategoriaController {
 
 
@@ -24,7 +25,7 @@ class CategoriaController {
   //GET /:id show
   show(req,res,next){
     Categoria.findOne({loja: req.query.loja, _id: req.params.id})
-    .select('_id produtos nome codigo loja')
+    .select('_id produtos nome codigo disponibilidade loja')
     .populate(['produtos'])
     .then((categoria => res.send({ categoria })))
     .catch(next);
@@ -43,12 +44,12 @@ class CategoriaController {
 
   //PUT /:id update
   async update(req,res,next){
-    const { nome, codigo, disponibildade, produtos } = req.body;
+    const { nome, codigo, disponibilidade, produtos } = req.body;
     try {
       const categoria = await Categoria.findById(req.params.id);
 
       if(nome) categoria.nome = nome;
-      if(disponibilidade !== indefined) categoria.disponibilidade = disponibildade;
+      if(disponibilidade !== undefined) categoria.disponibilidade = disponibildade;
       if(codigo) categoria.codigo = codigo;
       if(produtos) categoria.produtos;
 

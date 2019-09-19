@@ -15,7 +15,7 @@ router.get('/:id', Validation(CategoriaValidation.show), categoriaController.sho
 
 router.post('/', auth.required, LojaValidation.admin, Validation(CategoriaValidation.store), categoriaController.store);
 router.put('/:id', auth.required, LojaValidation.admin, Validation(CategoriaValidation.update) ,categoriaController.update);
-router.delete('/:id', auth.required, LojaValidation.admin, Validation(CategoriaValidation.remove) ,categoriaController.remove);
+router.delete("/:id", auth.required, LojaValidation.admin, Validation(CategoriaValidation.remove), categoriaController.remove);
 
 //ROTAS AO PRODUTO
 

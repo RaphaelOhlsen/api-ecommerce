@@ -137,7 +137,7 @@ class ProdutoControler {
   //GET / - index
   async index(req,res,next){
     const offset = Number(req.query.offset) || 0;
-    const limit = Nu30ber(req.query.limit) || 30;
+    const limit = Number(req.query.limit) || 30;
     try {
       const produtos = await Produto.paginate(
         { loja: req.query.loja},

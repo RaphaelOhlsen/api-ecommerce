@@ -7,7 +7,6 @@ const VariacaoSchema = Schema({
   preco: { type: Number, required: true },
   promocao: { type: Number },
   fotos: { type: Array, default: [] },
-  produto: { type: Schema.Types.ObjectId, ref: 'Produto', required: true },
   entrega: {
     type: {
       dimensoes: {

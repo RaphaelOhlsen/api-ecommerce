@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Variacao = mongoose.model('Avaliacao');
+const Variacao = mongoose.model('Variacao');
 const Produto = mongoose.model('Produto');
 
 class VariacaoControlller {
@@ -80,7 +80,7 @@ class VariacaoControlller {
       const variacao = await Variacao.findOne({ loja, produto, _id });
       if(!variacao) return res.status(400).send({ error: 'Variação não encontrada' });
 
-      const novasImagens = req.file.map(item => item.filename);
+      const novasImagens = req.files.map(item => item.filename);
       variacao.fotos = variacao.fotos.filter(item => item).concat(novasImagens);
 
       await variacao.save();

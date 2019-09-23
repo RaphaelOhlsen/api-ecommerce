@@ -49,7 +49,7 @@ class ProdutoControler {
     } catch(e){
         next(e)
     }
-  },
+  }
 
   //PUT /:id
   async update(req,res,next) {
@@ -152,7 +152,7 @@ class ProdutoControler {
   // GET /disponiveis - indexDisponiveis
   async indexDisponiveis(req,res,next){
     const offset = Number(req.query.offset) || 0;
-    const limit = Nu30ber(req.query.limit) || 30;
+    const limit = Number(req.query.limit) || 30;
     try {
       const produtos = await Produto.paginate(
         { loja: req.query.loja, disponibilidade: true },
@@ -167,7 +167,7 @@ class ProdutoControler {
   //GET /search/:search - search
   async search(req,res,next){
     const offset = Number(req.query.offset) || 0;
-    const limit = Nu30ber(req.query.limit) || 30;
+    const limit = Number(req.query.limit) || 30;
     const search = new RegExp(req.params.search,'i');
     try {
       const produtos = await Produto.paginate(

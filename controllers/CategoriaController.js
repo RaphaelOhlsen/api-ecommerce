@@ -75,6 +75,56 @@ class CategoriaController {
    * PRODUTOS
    */
 
+   //GET /:id/produtos - showProdutos
+  async showProdutos(req,res,next){
+    const { offset, limit } = req.query;
+    try{
+      const produtos = await Produto.paginate(
+        { categoria: req.params.id },
+        { offset: Number(offset) || 0, limit: Number(limit)|| 30 }
+      );
+      return res.send( { produtos });
+    } catch(e){
+      next(e);
+    }
+  }
+
+  //PUT /:id/produtos -updateProdutos
+  async updateProdutos(req,res,next){
+    try {
+      const categoria = await Categoria.findById(req.params.id);
+      const { produtos } = req.body;
+      if(produtos) categoria.produtos = produtos;
+      await categoria.save();
+
+      let _produtos = await Produto.find({
+        $or: [
+          { categoria: req.params.id },
+          { _id: { $in: produtos }} 
+        ]
+      });
+
+      _produtos = await Promise.all(_produtos.map(async (produto) => {
+        if(!produtos.includes(produto._id.toString())) {
+          produto.categoria = null;
+        } else {
+          produto.categoria = req.params.id;
+        }
+        await produtos.save();
+        return produto;
+      }));
+
+      const resultado = await Produto.paginate(
+        { categoria: req.params.id },
+        { offset: 0, limit: 30 }
+      )
+      
+      return res.send({ resultado });
+    } catch(e){
+        next(e);
+    }
+  }
+
 }
 
 module.exports =  CategoriaController;

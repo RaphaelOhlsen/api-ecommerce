@@ -35,16 +35,18 @@ class AvaliacaoControlller {
     try {
       const avaliacao = new Avaliacao({ nome, texto, pontuacao, loja, produto });
 
-      const _produto = Produto.findById(produto);
+      const _produto = await Produto.findById(produto);
+      if(!_produto) return res.status(422).send({ error: "Produto não existe" })
       _produto.avaliacoes.push(avaliacao._id);
 
       await _produto.save();
       await avaliacao.save();
       return res.send({ avaliacao });
-    } catch(e) {
+    }catch(e){
         next(e);
     }
-  }
+}
+
 
   //DELETE /:id - remove
 

@@ -6,7 +6,7 @@ const AvaliacaoSchema = Schema({
   texto: { type: String, required: true },
   pontuacao: { type: Number, default: 1 },
   produto: { type: Schema.Types.ObjectId, ref: 'Produto', required: true },
-  Loja: { type: Schema.Types.ObjectId, ref: 'Loja', required: true },
+  loja: { type: Schema.Types.ObjectId, ref: 'Loja', required: true },
 },{ timestamps: true });
 
 module.exports = mongoose.model('Avaliacao', AvaliacaoSchema);

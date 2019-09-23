@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Categoria = mongoose.model('Categoria');
+const Produto = mongoose.model('Produto');
 
 
 class CategoriaController {
@@ -110,7 +111,7 @@ class CategoriaController {
         } else {
           produto.categoria = req.params.id;
         }
-        await produtos.save();
+        await produto.save();
         return produto;
       }));
 

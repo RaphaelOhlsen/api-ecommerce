@@ -57,7 +57,7 @@ class ProdutoControler {
     const { loja } = req.query;
 
     try {
-      const produto = await Produdo.findById(req.params.id);
+      const produto = await Produto.findById(req.params.id);
       if(!produto) return res.status(400).send({ error: "Produto não encontrado"});
 
       if(titulo) produto.titulo = titulo;
@@ -99,9 +99,9 @@ class ProdutoControler {
       if(!produto) return res.status(400).send({ error: "Produto não encontrado"});
 
       const novasImagens = req.files.map(item => item.filename);
-      produtos.fotos = produtos.fotos.filter(item => item).concat(novasImagens);
+      produto.fotos = produto.fotos.filter(item => item).concat(novasImagens);
 
-      await produtos.save();
+      await produto.save();
       return res.send({ produto });
     } catch(e){
         next(e);

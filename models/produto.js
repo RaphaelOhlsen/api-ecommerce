@@ -14,8 +14,8 @@ const ProdutoSchema = Schema({
   sku: { type: String, required: true },
   categoria: { type:Schema.Types.ObjectId, ref: 'Categoria' },
   loja: { type:Schema.Types.ObjectId, ref: 'Loja' },
-  avaliacoes: { type: [{type:Schema.Types.ObjectId, ref: 'Avaliacoes'}] },
-  variacoes: { type: [{type:Schema.Types.ObjectId, ref: 'Variacoes'}] },
+  // avaliacoes: { type: [{type:Schema.Types.ObjectId, ref: 'Avaliacoes'}] },
+  // variacoes: { type: [{type:Schema.Types.ObjectId, ref: 'Variacoes'}] },
 }, { timestamps: true});
 
 ProdutoSchema.plugin(mongoosePaginate);

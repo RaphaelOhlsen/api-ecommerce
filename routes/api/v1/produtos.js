@@ -23,8 +23,10 @@ router.get('/search/:search', Validation(ProdutoValidation.search), produtoContr
 router.get('/:id', Validation(ProdutoValidation.show), produtoController.show);
 
 // VARIACOES
+router.get(':id/variacoes', Validation(ProdutoValidation.showVariacoes), produtoController.showVariacoes);
 
 // AVALIACOES
-router.get('/:id/avaliacoes', Validation(ProdutoValidation.showAvaliacoes), produtoController.showAvaliacoes)
+router.get('/:id/avaliacoes', Validation(ProdutoValidation.showAvaliacoes), produtoController.showAvaliacoes);
+
 
 module.exports = router;

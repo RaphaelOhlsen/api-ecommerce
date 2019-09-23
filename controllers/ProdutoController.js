@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Produto = mongoose.model('Produto');
 const Categoria = mongoose.model('Categoria');
 
-const Avaliacao = mongoose.model('Avalicao');
+const Avaliacao = mongoose.model('Avaliacao');
 
 const getSort = (sortType) => {
   switch(sortType){

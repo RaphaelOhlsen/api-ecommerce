@@ -1,5 +1,5 @@
-import mongoose from 'monggose';
-import mongoosePaginate from 'monggose-paginate';
+import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
 
 const PagamentoSchema = Schema({
@@ -14,4 +14,4 @@ const PagamentoSchema = Schema({
 
 PagamentoSchema.plugin(mongoosePaginate);
 
-module.exports = monggose.model('Pagamento', PagamentoSchema);
+module.exports = mongoose.model('Pagamento', PagamentoSchema);

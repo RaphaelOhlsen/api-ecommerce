@@ -1,4 +1,4 @@
-router = require('express').Router();
+const router = require('express').Router();
 
 const PedidoController = require('../../../controllers/PedidoController');
 
@@ -32,7 +32,7 @@ router.post('/:id', auth.required, pedidoController.store);
 router.delete('/:id', auth.required, pedidoController.remove);
 
 // -- carrinho
-router.get('/:id/carrinho', auth.required, pedidoController.showCarrinho);
+router.get('/:id/carrinho', auth.required, pedidoController.showCarrinhoPedido);
 
 // -- entrega
 

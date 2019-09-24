@@ -1,5 +1,5 @@
-import mongoose from 'monggose';
-import mongoosePaginate from 'monggose-paginate';
+import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
 const Schema = mongoose.Schema;
 
 const EntregaSchema = Schema({
@@ -15,4 +15,4 @@ const EntregaSchema = Schema({
 
 EntregaSchema.plugin(mongoosePaginate);
 
-module.exports = monggose.model('Entrega', EntregaSchema);
+module.exports = mongoose.model('Entrega', EntregaSchema);

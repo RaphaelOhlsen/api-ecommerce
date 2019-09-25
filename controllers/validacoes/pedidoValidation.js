@@ -24,7 +24,7 @@ const PedidoValidation = {
       id: Joi.string().alphanum().length(24).required()
     }
   },
-  showCarringoPedidoAdmin: {
+  showCarrinhoPedidoAdmin: {
     query: { 
       loja: Joi.string().alphanum().length(24).required()
     },

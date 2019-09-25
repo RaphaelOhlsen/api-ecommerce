@@ -22,7 +22,7 @@ const ClienteValidation = {
     query: {
       offset: Joi.number(),
       limit: Joi.number()
-    },
+    }, 
     params: {
       search: Joi.string().required()
     }

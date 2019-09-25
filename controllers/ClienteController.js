@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+const Pedido = mongoose.model("Pedido");
+const Produto = mongoose.model("Produto");
+const Variacao = mongoose.model("Variacao");
 
 const Cliente = mongoose.model("Cliente");
 const Usuario = mongoose.model("Usuario");

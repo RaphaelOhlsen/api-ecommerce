@@ -3,8 +3,8 @@ import Joi from 'joi';
 const PedidoValidation = {
   indexAdmin: {
     query: {
-      offset: Joi.number().required(),
-      limit: Joi.number().required(),
+      offset: Joi.number(),
+      limit: Joi.number(),
       loja: Joi.string().alphanum().length(24).required(),
     }
   },
@@ -34,8 +34,8 @@ const PedidoValidation = {
   },
   index: {
     query: {
-      offset: Joi.number().required(),
-      limit: Joi.number().required(),
+      offset: Joi.number(),
+      limit: Joi.number(),
       loja: Joi.string().alphanum().length(24).required(),
     }
   },
@@ -68,6 +68,7 @@ const PedidoValidation = {
       }).required(),
       entrega: Joi.object({
         custo: Joi.number().required(),
+        tipo: Joi.string().required(),
         prazo: Joi.number().required()
       }).required(),
     },

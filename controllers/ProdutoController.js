@@ -213,15 +213,15 @@ class ProdutoControler {
   }
 
   // VARIACOES
-  //GET /:id/avaliacoes - showVariacoes
+  //GET /:id/variacoes - showVariacoes
   async showVariacoes(req,res,next){
     try {
       const variacoes = await Variacao.find({ produto: req.params.id });
-      return res.send( { variacoes });
-    } catch (e) {
+      return res.send({ variacoes });
+    }catch(e){
         next(e);
     }
-  }
+}
 }
 
 module.exports = ProdutoControler;

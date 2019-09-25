@@ -30,14 +30,17 @@ class VariacaoControlller {
 
   // POST / - store
   async store(req,res,next){
-    const { nome, codigo, preco, promocao, entrega, quantidade } = req.body;
+    const { codigo, nome, preco, promocao, entrega, quantidade } = req.body;
     const { loja, produto } = req.query;
     try {
+      const existeCodigo = await Variacao.findOne( { codigo });
+      if(existeCodigo) return res.status(409).send({ error: "Codigo deve ser unico"});
       const variacao = new Variacao({ 
-        nome, codigo, preco, promocao, entrega, quantidade, loja, produto });
+        codigo, nome, preco, promocao, entrega, quantidade, loja, produto
+      });
 
       const _produto = await Produto.findById(produto);
-      if(!_produto) return res.status(400).send({ error: "Produto não encontrado" })
+      if(!_produto) return res.status(400).send({ error: "Produto não encontrado" });
       _produto.variacoes.push(variacao._id);
 
       await _produto.save();

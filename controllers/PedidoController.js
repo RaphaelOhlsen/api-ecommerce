@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { promises } from 'dns';
 
 const Pedido = mongoose.model('Pedido');
 const Produto = mongoose.model('Produto');
@@ -26,7 +25,7 @@ class PedidoController {
       );
       
       pedidos.docs = await Promise.all( pedidos.docs.map( async pedido => {
-        pedido.carrinho = await promises.all( pedido.carrinho.map(async item => {
+        pedido.carrinho = await Promise.all( pedido.carrinho.map(async item => {
           item.produto = await Produto.findById(item.produto);
           item.variacao = await Variacao.findById(item.variacao);
           return item;
@@ -48,7 +47,7 @@ class PedidoController {
     try {
       const pedido = await Pedido
         .findOne({ loja, _id })
-        .populate([cliente, pagamento, entrega]);
+        .populate(["cliente", "pagamento", "entrega"]);
       
       pedido.carrinho = await Promise.all( pedido.carrinho.map( async item => {
         item.produto = await Produto.findById(item.produto);
@@ -107,6 +106,7 @@ class PedidoController {
     const { offset, limit, loja} = req.query;
     try {
       const cliente = await Cliente.findOne({ usuario: req.payload.id });
+      if(!cliente) return res.status(400).send({ error: 'Cliente não encontrado'});
       const pedidos = await Pedido.paginate(
         { loja, cliente: cliente._id }, 
         { offset: Number(offset || 0), 
@@ -116,7 +116,7 @@ class PedidoController {
       );
       
       pedidos.docs = await Promise.all( pedidos.docs.map( async pedido => {
-        pedido.carrinho = await promises.all( pedido.carrinho.map(async item => {
+        pedido.carrinho = await Promise.all( pedido.carrinho.map(async item => {
           item.produto = await Produto.findById(item.produto);
           item.variacao = await Variacao.findById(item.variacao);
           return item;
@@ -139,7 +139,7 @@ class PedidoController {
       if(!cliente) return res.status(400).send({ error: 'Cliente não encontrado'});
       const pedido = await Pedido
         .findOne({ _id, cliente: cliente._id })
-        .populate([cliente, pagamento, entrega]);
+        .populate(["cliente", "pagamento", "entrega"]);
       
       pedido.carrinho = await Promise.all( pedido.carrinho.map( async item => {
         item.produto = await Produto.findById(item.produto);
@@ -172,7 +172,7 @@ class PedidoController {
 
       const cliente = await Cliente.findOne({ usuario: req.payload.id });
       
-      const NovoPagamento = new Pagamento({
+      const novoPagamento = new Pagamento({
         valor: pagamento.valor,
         forma: pagamento.forma,
         status: "iniciando",
@@ -184,6 +184,7 @@ class PedidoController {
         status: "nao_iniciado",
         custo: entrega.custo,
         prazo: entrega.prazo,
+        tipo: entrega.tipo,
         payload: entrega,
         loja
       });
@@ -191,12 +192,12 @@ class PedidoController {
       const pedido = new Pedido({
         cliente: cliente._id,
         carrinho,
-        pagamento: NovoPagamento._id,
+        pagamento: novoPagamento._id,
         entrega: novaEntrega._id,
         loja
       });
 
-      NovoPagamento.pedido = pedido._id;
+      novoPagamento.pedido = pedido._id;
       novaEntrega.pedido = pedido._id;
 
       await pedido.save();
@@ -208,7 +209,7 @@ class PedidoController {
       return res.send(
         { pedido: Object.assign(
             {},
-            pedido,
+            pedido._doc,
             { entrega: novaEntrega, pagamento: novoPagamento, cliente }
           ) 
         }

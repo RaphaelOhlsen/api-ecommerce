@@ -6,6 +6,7 @@ const Variacao = mongoose.model('Variacao');
 const Pagamento = mongoose.model('Pagamento');
 const Entrega = mongoose.model('Entrega');
 const Cliente = mongoose.model('Cliente');
+const RegistroPedido = mongoose.model('RegistroPedido');
 
 const CarrinhoValidation = require('./validacoes/carrinhoValidation');
 
@@ -54,7 +55,8 @@ class PedidoController {
         item.variacao = await Variacao.findById(item.variacao);
         return item;
       }));
-      return res.send({ pedido });
+      const registros = await RegistroPedido.find({ pedido: pedido._id });
+      return res.send({ pedido, registros });
     } catch(e) {
         next(e);
     }
@@ -73,6 +75,13 @@ class PedidoController {
       // Enviar email para cliente e admin de pedido cancelado
 
       await pedido.save();
+
+      const registroPedido = new RegistroPedido({
+        pedido: pedido._id,
+        tipo: "pedido",
+        situacao: "pedido_cancelado"
+      });
+      await registroPedido.save();
 
       return res.send({ cancelado: true });
     } catch(e) {
@@ -146,7 +155,8 @@ class PedidoController {
         item.variacao = await Variacao.findById(item.variacao);
         return item;
       }));
-      return res.send({ pedido });
+      const registros = await RegistroPedido.find({ pedido: pedido._id });
+      return res.send({ pedido, registros });
     } catch(e) {
         next(e);
     }
@@ -204,6 +214,13 @@ class PedidoController {
       await novoPagamento.save();
       await novaEntrega.save();
 
+      const registroPedido = new RegistroPedido({
+        pedido: pedido._id,
+        tipo: "pedido",
+        situacao: "pedido_criado"
+      });
+      await registroPedido.save();
+
       // Notificar via email para o cliente e o admin sobre novo pedido
 
       return res.send(
@@ -236,6 +253,13 @@ class PedidoController {
       // Enviar email para cliente de pedido cancelado
 
       await pedido.save();
+
+      const registroPedido = new RegistroPedido({
+        pedido: pedido._id,
+        tipo: "pedido",
+        situacao: "pedido_cancelado"
+      });
+      await registroPedido.save();
 
       return res.send({ cancelado: true });
     } catch(e) {

@@ -79,6 +79,7 @@ class ClienteController {
   async showAdmin(req,res,next){
     try {
       const cliente = await Cliente.findOne({ _id: req.params.id, loja: req.query.loja }).populate({ path:"usuario", select: "-salt -hash" });
+      console.log(req.params.id, req.query.loja);
       return res.send({ cliente });
     } catch(e){
         next(e);
@@ -135,10 +136,11 @@ class ClienteController {
   async removeAdmin(req,res,next){
     try {
       const cliente = await Cliente.findById(req.params.id).populate("usuario");
-      if(!cliente) return res.status(400).send({ error: "Cliente nao encontrado." })
+      if(!cliente) return res.status(400).send({ error: "Cliente nao encontrado." });
       await cliente.usuario.remove();
       await cliente.remove();
       return res.send({ deletado: true });
+
     }catch(e){
         next(e);
     }

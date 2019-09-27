@@ -40,8 +40,9 @@ class ProdutoControler {
         sku,
         loja
       });
-      
       const categoria = await Categoria.findById(categoriaId);
+      if(!categoria) 
+        return res.status(409).send( { error: 'Categoria não encontrada'});
       categoria.produtos.push(produto._id);
 
       await produto.save();
@@ -194,7 +195,7 @@ class ProdutoControler {
     try {
       const produtos = await Produto
         .findById(req.params.id)
-        .populate(["avaliacoes", "variacoes", "loja"]);
+        .populate(["loja", "categoria"]);
       return res.send({ produtos });
     } catch(e){
         next(e);

@@ -8,6 +8,8 @@ const Entrega = mongoose.model('Entrega');
 const Cliente = mongoose.model('Cliente');
 const RegistroPedido = mongoose.model('RegistroPedido');
 
+const { calcularFrete } = require('./integracoes/correios');
+
 const CarrinhoValidation = require('./validacoes/carrinhoValidation');
 
 class PedidoController {
@@ -156,6 +158,7 @@ class PedidoController {
         return item;
       }));
       const registros = await RegistroPedido.find({ pedido: pedido._id });
+
       return res.send({ pedido, registros });
     } catch(e) {
         next(e);

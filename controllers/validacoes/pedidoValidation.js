@@ -1,4 +1,6 @@
-import Joi from 'joi';
+import BaseJoi from 'joi';
+import Extension from 'joi-date-extensions';
+const Joi = BaseJoi.extend(Extension);
 
 const PedidoValidation = {
   indexAdmin: {
@@ -64,12 +66,40 @@ const PedidoValidation = {
       })).required(),
       pagamento: Joi.object({
         valor: Joi.number().required(),
-        forma: Joi.string().required()
+        forma: Joi.string().required(),
+        parcelas: Joi.string().required(),
+        enderecoEntregaIgualCobranca: Joi.boolean().required(),
+        endereco: Joi.object({
+          local: Joi.number().required(),
+          numero: Joi.number().required(),
+          complemento: Joi.number().optional(),
+          bairro: Joi.number().required(),
+          cidade: Joi.number().required(),
+          estado: Joi.number().required(),
+          CEP: Joi.number().required(),
+        }).required(),
+        cartao: Joi.object({
+          nomeCompleto: Joi.string().required(),
+          codigoArea: Joi.string().required(),
+          telefone: Joi.string().required(),
+          dataDeNascimento: Joi.date().format('DD/MM/YYYY').raw().required(),
+          credit_card_token: Joi.string().required(),
+          cpf: Joi.string().required(),
+        }).optional()
       }).required(),
       entrega: Joi.object({
         custo: Joi.number().required(),
         tipo: Joi.string().required(),
-        prazo: Joi.number().required()
+        prazo: Joi.number().required(),
+        endereco: Joi.object({
+          local: Joi.number().required(),
+          numero: Joi.number().required(),
+          complemento: Joi.number().optional(),
+          bairro: Joi.number().required(),
+          cidade: Joi.number().required(),
+          estado: Joi.number().required(),
+          CEP: Joi.number().required(),
+        }).required(),
       }).required(),
     },
     query: {

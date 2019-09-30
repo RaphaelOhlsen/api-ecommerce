@@ -18,7 +18,7 @@ router.get('/session', pagamentoController.getSessionId);
 
 // CLIENTE
 router.get('/:id', auth.required, pagamentoController.show);
-router.post('/pager/:id', auth.required, pagamentoController.pagar);
+router.post('/pagar/:id', auth.required, pagamentoController.pagar);
 
 //ADMIN
 router.put('/:id', auth.required, LojaValidation.admin, pagamentoController.update);

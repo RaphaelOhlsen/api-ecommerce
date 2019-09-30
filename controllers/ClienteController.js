@@ -79,7 +79,6 @@ class ClienteController {
   async showAdmin(req,res,next){
     try {
       const cliente = await Cliente.findOne({ _id: req.params.id, loja: req.query.loja }).populate({ path:"usuario", select: "-salt -hash" });
-      console.log(req.params.id, req.query.loja);
       return res.send({ cliente });
     } catch(e){
         next(e);

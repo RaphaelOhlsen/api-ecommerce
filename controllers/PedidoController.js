@@ -10,6 +10,7 @@ const RegistroPedido = mongoose.model('RegistroPedido');
 
 const { calcularFrete } = require('./integracoes/correios');
 const EntregaValidation = require('./validacoes/entregaValidation');
+const PagamentoValidation = require('./validacoes/pagamentoValidation');
 
 const CarrinhoValidation = require('./validacoes/carrinhoValidation');
 
@@ -183,8 +184,12 @@ class PedidoController {
         return res.status(422).send({error: "Dados de Entrega Inválidos"});
 
       //CHECAR DADOS DE PAGAMENTO
-      // if(!PagamentoValidation(carrinho, pagamento)) 
-      //   return res.status(422).send({error: "Dados de Pagamento  Inválidos"});
+      if(!await PagamentoValidation.checarValrTotal({ carrinho, pagamento, entrega })) 
+        return res.status(422).send({error: "Dados de Pagamento Inválidos"});
+
+      //CHECAR DADOS DE CARTAO
+      if(PagamentoValidation.checarCartao({ pagamento })) 
+        return res.status(422).send({error: "Dados de Pagamento com Cartão Inválidos"});
       
       const novoPagamento = new Pagamento({
         valor: pagamento.valor,

@@ -171,6 +171,7 @@ class PedidoController {
   async store(req,res,next){
     const { carrinho, pagamento, entrega } = req.body;
     const { loja } = req.query;
+    const _carrinho = carrinho.slice();
     try {
 
       //CHECAR DADOS DO CARRINHO
@@ -184,7 +185,7 @@ class PedidoController {
         return res.status(422).send({error: "Dados de Entrega Inválidos"});
 
       //CHECAR DADOS DE PAGAMENTO
-      if(!await PagamentoValidation.checarValrTotal({ carrinho, pagamento, entrega })) 
+      if(!await PagamentoValidation.checarValorTotal({ carrinho, pagamento, entrega })) 
         return res.status(422).send({error: "Dados de Pagamento Inválidos"});
 
       //CHECAR DADOS DE CARTAO
@@ -213,7 +214,7 @@ class PedidoController {
 
       const pedido = new Pedido({
         cliente: cliente._id,
-        carrinho,
+        carrinho: _carrinho,
         pagamento: novoPagamento._id,
         entrega: novaEntrega._id,
         loja

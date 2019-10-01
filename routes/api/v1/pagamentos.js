@@ -7,7 +7,7 @@ const { PagamentoValidation } = require('../../../controllers/validacoes/pagamen
 const Validation = require('express-validation');
 const auth = require('../../auth');
 
-const PagamentoController = new PagamentoController();
+const pagamentoController = new PagamentoController();
 
 
 // TESTE

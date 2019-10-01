@@ -1,5 +1,5 @@
 const pagSeguroConfig = require('../../config/pagseguro');
-const PagSeguro = require('../../helpres/pagseguro');
+const PagSeguro = require('../../helpers/pagseguro');
 
 const _criarPagamentoComBoleto = (senderHash, { cliente, carrinho, entrega, pagamento}) => {
   return new Promise((resolver, rejeitar) => {
@@ -138,7 +138,7 @@ const criarPagamento = async(senderHash, data) => {
 const getSessionId = () => {
   return new Promise((resolver, rejeitar) => {
     const pag = new PagSeguro(pagSeguroConfig);
-    pag.sessionId((err, session_id) => err ? rejeitar(err) : resolver(session_id))
+    pag.sessionId((err, session_id) => err ? rejeitar(err) : resolver(session_id));
   })
 }
 

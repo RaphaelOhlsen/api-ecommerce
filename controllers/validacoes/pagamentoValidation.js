@@ -21,7 +21,7 @@ const PagamentoValidation = {
       loja: Joi.string().alphanum().length(24).required()
     },
     body: {
-      senderHash: Joi.string.required()
+      senderHash: Joi.string().required()
     }
   },
   update: {
@@ -32,7 +32,7 @@ const PagamentoValidation = {
       loja: Joi.string().alphanum().length(24).required()
     },
     body: {
-      status: Joi.string.optional()
+      status: Joi.string().optional()
     }
   }
 };

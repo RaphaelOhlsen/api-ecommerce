@@ -12,6 +12,7 @@ const RegistroPedido = mongoose.model('RegistroPedido');
 const { calcularFrete } = require('./integracoes/correios');
 const EntregaValidation = require('./validacoes/entregaValidation');
 const PagamentoValidation = require('./validacoes/pagamentoValidation');
+const QuantidadeValidation = require('./validacoes/quantidadeValidation');
 
 const EmailController = require('./EmailController');
 
@@ -186,6 +187,9 @@ class PedidoController {
         return res.status(422).send({error: "Carrinho Inválido"});
 
       const cliente = await Cliente.findOne({ usuario: req.payload.id }).populate({path:"usuario", select:"_id nome email"});
+
+      if(!await QuantidadeValidation.validarQuantidadeDisponivel(carrinho))
+       return res.status(400).send({ error: "Produtos não tem a quantidade disponivel" });
 
       //CHECAR DADOS DA ENTREGA
       if(!await EntregaValidation.checarValorPrazo(cliente.endereco.CEP, carrinho, entrega)) 

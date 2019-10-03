@@ -46,7 +46,7 @@ const checarValorTotal = async ({ carrinho, entrega, pagamento }) => {
     }));
     let valorTotal = entrega.custo;
     valorTotal += _carrinho.reduce((all, item) => all + (item.quantidade * item.precoUnitario), 0);
-    console.log(valorTotal)
+
     return (
       valorTotal.toFixed(2) === pagamento.valor.toFixed(2) &&
         ( !pagamento.parcelas || pagamento.parcelas <= 6 )

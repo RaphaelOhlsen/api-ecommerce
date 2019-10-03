@@ -19,7 +19,6 @@ const _send = ({ subject, emails, message }, cb = null) => {
       }
     });
   } else {
-    console.log(mailOptions);
     if(cb) return cb(null, true);
   }
 };

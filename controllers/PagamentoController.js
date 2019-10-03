@@ -7,6 +7,7 @@ const Pedido = mongoose.model('Pedido');
 const Produto = mongoose.model('Produto');
 const Variacao = mongoose.model('Variacao');
 const RegistroPedido = mongoose.model('RegistroPedido');
+const QuantidadeValidation = require('./validacoes/quantidadeValidation');
 
 const EmailController = require('./EmailController');
 
@@ -94,7 +95,6 @@ class PagamentoController {
       await registroPedido.save();
 
       const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate: { path: 'usuario' } });
-      console.log(pedido)
       EmailController.atualizarPedido({
          usuario: pedido.cliente.usuario,
          pedido,
@@ -104,6 +104,12 @@ class PagamentoController {
       });
 
       await pagamento.save();
+
+      if( status.toLowerCase().includes('pago')) 
+        await QuantidadeValidation.atualizarQuantidade('confirmar_pedido', pedido);
+      else if( status.toLowerCase().includes('cancelado'))
+        await QuantidadeValidation.atualizarQuantidade('cancelar_pedido', pedido);
+
       return res.send({ pagamento });
 
     } catch(e) {
@@ -127,17 +133,16 @@ class PagamentoController {
     try {
       const { notificationCode, notificationType } = req.body;
       if( notificationType !== 'transaction' ) return res.send({ sucess: true});
-    
+
       const result = await  getNotification(notificationCode);
-      console.log("Resultado: ", result)
+
       const pagamento = await Pagamento.findOne({ pagSeguroCode: result.code });
-      console.log("Pagamento: ", pagamento)
       if(!pagamento) return res.status(400).send({ error: "Pagamento não existe" });
 
       const registros = await RegistroPedido.find({ pedido: pagamento.pedido, tipo: "pagamento" });
 
       const situacao = (pagamento.pagSeguroCode) ? await getTransactionStatus(pagamento.pagSeguroCode) : null;
-
+     
       if( 
         situacao && 
           ( 
@@ -153,8 +158,9 @@ class PagamentoController {
           });
           pagamento.status = situacao.status;
           await pagamento.save();
+
           await registroPedido.save();
-          
+
           const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate: { path: 'usuario' } });
           EmailController.atualizarPedido({
             usuario: pedido.cliente.usuario,
@@ -163,7 +169,14 @@ class PagamentoController {
             status: situacao.status,
             data: new Date()
           });
-      }
+
+          if( situacao.status === 'Paga') {
+            await QuantidadeValidation.atualizarQuantidade('confirmar_pedido', pedido);
+          } 
+          else if( situacao.status === 'Cancelada')
+            await QuantidadeValidation.atualizarQuantidade('cancelar_pedido', pedido); 
+            
+          }
       return res.send({ sucess: true });
 
 

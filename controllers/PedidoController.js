@@ -95,6 +95,8 @@ class PedidoController {
 
       await pedido.save();
 
+      await QuantidadeValidation.atualizarQuantidade("cancelar_pedido", pedido);
+
       return res.send({ cancelado: true });
     } catch(e) {
         next(e);
@@ -238,6 +240,8 @@ class PedidoController {
       await novoPagamento.save();
       await novaEntrega.save();
 
+      await QuantidadeValidation.atualizarQuantidade('salvar_pedido', pedido);
+
       const registroPedido = new RegistroPedido({
         pedido: pedido._id,
         tipo: "pedido",
@@ -282,6 +286,8 @@ class PedidoController {
       })
 
       await pedido.save();
+
+      await QuantidadeValidation.atualizarQuantidade("cancelar_pedido", pedido);
 
       const registroPedido = new RegistroPedido({
         pedido: pedido._id,

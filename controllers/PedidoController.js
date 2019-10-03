@@ -78,7 +78,7 @@ class PedidoController {
         loja,
          _id 
       })
-      .populate({ path: 'cliente', populate: 'usuario'});
+      .populate({ path: 'cliente', populate: {path: 'usuario'}});
 
       if(!pedido) return res.status(400).send({ error: 'Pedido não encontrado'});
       pedido.cancelado = true;
@@ -274,7 +274,7 @@ class PedidoController {
 
       const administradores = await Usuario.find({ permissao: 'admin', loja: pedido.loja });
       administradores.forEach( usuario => {
-        EmailController.enviarNovoPedido({ pedido, usuario });
+        EmailController.cancelarPedido({ pedido, usuario });
       })
 
       await pedido.save();

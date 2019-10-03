@@ -93,7 +93,8 @@ class PagamentoController {
       });
       await registroPedido.save();
 
-      const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate:'usuario'});
+      const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate: { path: 'usuario' } });
+      console.log(pedido)
       EmailController.atualizarPedido({
          usuario: pedido.cliente.usuario,
          pedido,
@@ -154,7 +155,7 @@ class PagamentoController {
           await pagamento.save();
           await registroPedido.save();
           
-          const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate:'usuario'});
+          const pedido = await Pedido.findById(pagamento.pedido).populate({ path:'cliente', populate: { path: 'usuario' } });
           EmailController.atualizarPedido({
             usuario: pedido.cliente.usuario,
             pedido,

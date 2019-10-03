@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const Pedido = mongoose.model('Pedido');
+const Usuario = mongoose.model('Usuario');
 const Produto = mongoose.model('Produto');
 const Variacao = mongoose.model('Variacao');
 const Pagamento = mongoose.model('Pagamento');
@@ -11,6 +12,8 @@ const RegistroPedido = mongoose.model('RegistroPedido');
 const { calcularFrete } = require('./integracoes/correios');
 const EntregaValidation = require('./validacoes/entregaValidation');
 const PagamentoValidation = require('./validacoes/pagamentoValidation');
+
+const EmailController = require('./EmailController');
 
 const CarrinhoValidation = require('./validacoes/carrinhoValidation');
 
@@ -71,14 +74,14 @@ class PedidoController {
     const { loja } = req.query
     const _id  = req.params.id;
     try {
-      const pedido = await Pedido.findOne({ loja, _id });
+      const pedido = await Pedido.findOne({ 
+        loja,
+         _id 
+      })
+      .populate({ path: 'cliente', populate: 'usuario'});
+
       if(!pedido) return res.status(400).send({ error: 'Pedido não encontrado'});
       pedido.cancelado = true;
-
-      // Registro de ativade = pedido cancelado
-      // Enviar email para cliente e admin de pedido cancelado
-
-      await pedido.save();
 
       const registroPedido = new RegistroPedido({
         pedido: pedido._id,
@@ -86,6 +89,10 @@ class PedidoController {
         situacao: "pedido_cancelado"
       });
       await registroPedido.save();
+
+      EmailController.cancelarPedido({ usuario: pedido.cliente.usuario, pedido });
+
+      await pedido.save();
 
       return res.send({ cancelado: true });
     } catch(e) {
@@ -178,7 +185,7 @@ class PedidoController {
       if(!await CarrinhoValidation(carrinho)) 
         return res.status(422).send({error: "Carrinho Inválido"});
 
-      const cliente = await Cliente.findOne({ usuario: req.payload.id }).populate("usuario");
+      const cliente = await Cliente.findOne({ usuario: req.payload.id }).populate({path:"usuario", select:"_id nome email"});
 
       //CHECAR DADOS DA ENTREGA
       if(!await EntregaValidation.checarValorPrazo(cliente.endereco.CEP, carrinho, entrega)) 
@@ -234,8 +241,11 @@ class PedidoController {
       });
       await registroPedido.save();
 
-      // Notificar via email para o cliente e o admin sobre novo pedido
-
+      EmailController.enviarNovoPedido({ pedido, usuario: cliente.usuario });
+      const administradores = await Usuario.find({ permissao: 'admin', loja });
+      administradores.forEach( usuario => {
+        EmailController.enviarNovoPedido({ pedido, usuario });
+      })
       return res.send(
         { pedido: Object.assign(
             {},
@@ -262,8 +272,10 @@ class PedidoController {
       if(!pedido) return res.status(400).send({ error: 'Pedido não encontrado'});
       pedido.cancelado = true;
 
-      // Registro de ativade = pedido cancelado
-      // Enviar email para cliente de pedido cancelado
+      const administradores = await Usuario.find({ permissao: 'admin', loja: pedido.loja });
+      administradores.forEach( usuario => {
+        EmailController.enviarNovoPedido({ pedido, usuario });
+      })
 
       await pedido.save();
 

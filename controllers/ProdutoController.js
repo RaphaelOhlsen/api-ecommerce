@@ -57,7 +57,7 @@ class ProdutoControler {
 
   //PUT /:id
   async update(req,res,next) {
-    const { titulo, descricao, disponibilidade, categoria, preco, promocao, sku } = req.body;
+    const { titulo, descricao, disponibilidade, fotos, categoria, preco, promocao, sku } = req.body;
     const { loja } = req.query;
 
     try {
@@ -67,6 +67,7 @@ class ProdutoControler {
       if(titulo) produto.titulo = titulo;
       if(descricao) produto.descricao = descricao;
       if(disponibilidade !== undefined) produto.disponibilidade = disponibilidade;
+      if(fotos) produto.fotos = fotos;
       if(preco) produto.preco = preco;
       if(promocao) produto.promocao = promocao;
       if(sku) produto.sku = sku;
@@ -76,8 +77,8 @@ class ProdutoControler {
         const newCategoria = await Categoria.findById(categoria);
 
         if(oldCategoria && newCategoria) {
-          olfdCategoria.produtos = oldCategoria.produtos
-            .filter(item => item !== produto._id);
+          oldCategoria.produtos = oldCategoria.produtos
+            .filter(item => item.toString() !== produto._id.toString());
           newCategoria.produtos.push(produto._id);
           produto.categoria = categoria;
           await oldCategoria.save();
@@ -145,7 +146,7 @@ class ProdutoControler {
     try {
       const produtos = await Produto.paginate(
         { loja: req.query.loja},
-        { offset, limit, sort: getSort(req.query.sortType) }
+        { offset, limit, sort: getSort(req.query.sortType), populate: ["categoria"] }
       );
       return res.send({ produtos });
     } catch(e){
@@ -160,7 +161,7 @@ class ProdutoControler {
     try {
       const produtos = await Produto.paginate(
         { loja: req.query.loja, disponibilidade: true },
-        { offset, limit, sort: getSort(req.query.sortType) }
+        { offset, limit, sort: getSort(req.query.sortType), populate: ["categoria"] }
       );
       return res.send({ produtos });
     } catch(e){
@@ -183,7 +184,7 @@ class ProdutoControler {
             { "sku": { $regex: search } },
           ]
         },
-        { offset, limit, sort: getSort(req.query.sortType) }
+        { offset, limit, sort: getSort(req.query.sortType), populate: ["categoria"] }
       );
       return res.send({ produtos });
     } catch(e){
@@ -193,10 +194,10 @@ class ProdutoControler {
   // GET /:id
   async show(req,res,next){
     try {
-      const produtos = await Produto
+      const produto = await Produto
         .findById(req.params.id)
         .populate(["loja", "categoria"]);
-      return res.send({ produtos });
+      return res.send({ produto });
     } catch(e){
         next(e);
     }

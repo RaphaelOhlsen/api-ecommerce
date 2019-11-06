@@ -53,7 +53,7 @@ class VariacaoControlller {
 
   //PUT /:id - update
   async update(req,res,next){
-    const { nome, codigo, preco, promocao, entrega, quantidade, disponibilidade } = req.body;
+    const { nome, fotos, codigo, preco, promocao, entrega, quantidade, disponibilidade } = req.body;
     const { loja, produto } = req.query;
     const { id: _id } = req.params;
 
@@ -67,6 +67,7 @@ class VariacaoControlller {
       if(promocao) variacao.promocao = promocao;
       if(entrega) variacao.entrega = entrega;
       if(quantidade) variacao.quantidade = quantidade;
+      if( fotos ) variacao.fotos = fotos;
 
       await variacao.save();
       return res.send({ variacao });

@@ -20,6 +20,7 @@ const ProdutoValidation = {
       titulo: Joi.string().optional(),
       descricao: Joi.string().optional(),
       categoria: Joi.string().alphanum().length(24).optional(),
+      fotos: Joi.array().items(Joi.string()).optional(),
       preco: Joi.string().optional(),
       sku: Joi.string().optional(),
       disponibilidade: Joi.boolean().optional()
